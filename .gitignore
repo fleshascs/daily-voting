@@ -1,6 +1,5 @@
 build
-ggc
-data
+cron.log
 
 # Coverage reports
 coverage

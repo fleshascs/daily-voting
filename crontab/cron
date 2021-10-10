@@ -1,3 +1,2 @@
-# * * * * * node /user/app/build/src/index.js  >> /var/log/cron.log 2>&1
-* * * * * node /user/app/build/src/index.js
+* * * * * node /usr/app/build/src/index.js
 # remember to end this file with an empty new line

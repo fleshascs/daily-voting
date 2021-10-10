@@ -4,7 +4,8 @@
     "rootDir": ".",
     "outDir": "build",
     "removeComments": true,
-    "noEmit": false
+    "noEmit": false,
+    "importHelpers": false
   },
   "include": ["src/**/*"]
 }

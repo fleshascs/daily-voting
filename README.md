@@ -1,4 +1,4 @@
-## voting bot for cs-servers.lt and cstops.lt
+# Voting Bot For **[cs-servers.lt](http://cs-servers.lt)** And **[cstops.lt](https://cstops.lt)**
 
 ## Dependencies
 
