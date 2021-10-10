@@ -6,7 +6,7 @@ import { SecretData } from './types';
 import { parseCaptchaUrl, parseFormData } from './parseHtml';
 import { parseCaptcha } from './parseCaptcha';
 
-export async function vote(serverId: number, opt: RequestInit = {}): Promise<void> {
+export async function vote(serverId: string, opt: RequestInit = {}): Promise<void> {
   const fetch = createStatefulFetch();
   const res = await fetch('http://cs-servers.lt/vote.php?sid=' + serverId, opt);
   const html = await res.text();
