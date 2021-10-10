@@ -25,6 +25,7 @@ export async function vote(
     ...opt
   });
 
-  const text = await res.text();
-  console.log('text', text);
+  // const text = await res.text();
+  // console.log('text', text);
+  await res.text();
 }

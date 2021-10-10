@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  daily-voting:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    stdin_open: true
+    volumes:
+      - ./:/var/log/

@@ -23,6 +23,7 @@ export async function vote(serverId: string, opt: RequestInit = {}): Promise<voi
     body: new URLSearchParams(data.formData)
   });
 
-  const text2 = await res2.text();
-  console.log('text2', text2);
+  await res2.text();
+  // const text2 = await res2.text();
+  // console.log('text2', text2);
 }
