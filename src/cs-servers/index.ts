@@ -1,12 +1,16 @@
 import { parse } from 'node-html-parser';
 import { RequestInit } from 'node-fetch';
-import { createHeaders, pipe } from '../utils';
+import { createHeaders, pipe, retry } from '../utils';
 import { createStatefulFetch } from '../statefulFetch';
 import { SecretData } from './types';
 import { parseCaptchaUrl, parseFormData } from './parseHtml';
 import { parseCaptcha } from './parseCaptcha';
 
-export async function vote(serverId: string, opt: RequestInit = {}): Promise<void> {
+export function vote(...args: Parameters<typeof voteFn>): Promise<ReturnType<typeof voteFn>> {
+  return retry(() => voteFn(...args));
+}
+
+async function voteFn(serverId: string, opt: RequestInit = {}): Promise<void> {
   const fetch = createStatefulFetch();
   const res = await fetch('http://cs-servers.lt/vote.php?sid=' + serverId, opt);
   const html = await res.text();
@@ -23,7 +27,8 @@ export async function vote(serverId: string, opt: RequestInit = {}): Promise<voi
     body: new URLSearchParams(data.formData)
   });
 
-  await res2.text();
-  // const text2 = await res2.text();
-  // console.log('text2', text2);
+  const text2 = await res2.text();
+  if (text2.toLowerCase().includes('klaida')) {
+    throw new Error(text2);
+  }
 }

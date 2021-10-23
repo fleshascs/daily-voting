@@ -48,3 +48,22 @@ export function createHeaders(extraHeaders: Record<string, string> = null): Reco
 
   return extraHeaders ? Object.assign(defaultHeaders, extraHeaders) : defaultHeaders;
 }
+
+export async function retry<T extends () => Promise<unknown>>(
+  fn: T,
+  retriesLeft = 3,
+  interval = 1000,
+  exponential = false
+): Promise<ReturnType<typeof fn>> {
+  try {
+    return await fn();
+  } catch (error) {
+    if (retriesLeft) {
+      await new Promise((r) => setTimeout(r, interval));
+      console.log('retry');
+
+      return retry(fn, retriesLeft - 1, exponential ? interval * 2 : interval, exponential);
+      // } else throw new Error('Max retries reached');
+    } else throw error;
+  }
+}
