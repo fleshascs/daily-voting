@@ -6,8 +6,8 @@ import { SecretData } from './types';
 import { parseCaptchaUrl, parseFormData } from './parseHtml';
 import { parseCaptcha } from './parseCaptcha';
 
-export function vote(...args: Parameters<typeof voteFn>): Promise<ReturnType<typeof voteFn>> {
-  return retry(() => voteFn(...args));
+export async function vote(...args: Parameters<typeof voteFn>): Promise<void> {
+  await retry(() => voteFn(...args));
 }
 
 async function voteFn(serverId: string, opt: RequestInit = {}): Promise<void> {

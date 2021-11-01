@@ -1,4 +1,10 @@
-export function fetchProxies(): Promise<any[]> {
+export type AgentProxy = {
+  protocols: string[];
+  ipAddress: string;
+  port: number;
+};
+
+export function fetchProxies(): Promise<AgentProxy[]> {
   return Promise.resolve([
     {
       protocols: ['socks4'],

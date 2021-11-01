@@ -60,7 +60,7 @@ export async function retry<T extends () => Promise<unknown>>(
   } catch (error) {
     if (retriesLeft) {
       await new Promise((r) => setTimeout(r, interval));
-      console.log('retry');
+      console.log('retry', error.message);
 
       return retry(fn, retriesLeft - 1, exponential ? interval * 2 : interval, exponential);
       // } else throw new Error('Max retries reached');

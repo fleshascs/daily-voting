@@ -8,7 +8,7 @@ export async function vote(
   opt: RequestInit = {}
 ): Promise<void> {
   const fetch = createStatefulFetch();
-  const res = await fetch('https://cstops.lt/js/rate/jRating.php', {
+  await fetch('https://cstops.lt/js/rate/jRating.php', {
     method: 'POST',
     headers: createHeaders({
       'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
@@ -27,5 +27,4 @@ export async function vote(
 
   // const text = await res.text();
   // console.log('text', text);
-  await res.text();
 }

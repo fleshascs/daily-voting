@@ -2,46 +2,26 @@ import { vote as voteCsServers } from './cs-servers';
 import { vote as voteCsTops } from './cstops';
 import { fetchProxies } from './fetchProxies';
 import { getAgent } from './agent';
-const fs = require('fs');
 
-(async () => {
-  const proxies = await getProxies();
+export const handler = async (): Promise<string> => {
+  const proxies = await fetchProxies();
   console.log('proxies', proxies);
-  let proxiesCount = proxies.length;
 
-  proxies.forEach(async (proxy) => {
-    console.log('proxy start fetch', proxy.ipAddress);
-
+  const tasks = proxies.reduce<Array<Promise<void>>>((tasksList, proxy) => {
     const agent = getAgent(proxy.protocols[0], proxy.ipAddress, proxy.port);
     const csTops = ['cs.fleshas.lt:27015'].map((id) => voteCsTops(id, proxy.ipAddress, { agent }));
     const csServers = ['73352'].map((id) => voteCsServers(id, { agent }));
+    return tasksList.concat(csTops, csServers);
+  }, []);
 
-    const results = await Promise.allSettled([...csTops, ...csServers]);
-    const statuses = results.map((r) => r.status);
-    proxiesCount--;
+  const results = await Promise.allSettled(tasks);
 
-    console.log(
-      'results from:',
-      proxy.ipAddress,
-      'statuses:',
-      statuses,
-      'proxies left:',
-      proxiesCount
-    );
-  });
-})();
+  return JSON.stringify(results);
+};
 
-async function getProxies() {
-  const proxieFile = __dirname + '/proxies.json';
-  let proxies = [];
-  try {
-    proxies = JSON.parse(fs.readFileSync(proxieFile));
-  } catch {}
-  if (!proxies?.length) {
-    console.log('fetching proxies...');
-    proxies = await fetchProxies();
-    console.log('fetch proxies', proxies);
-    fs.writeFileSync(proxieFile, JSON.stringify(proxies));
-  }
-  return proxies;
-}
+// import { vote as voteCsServers } from './cs-servers';
+
+// export const handler = async (): Promise<string> => {
+//   const results = await Promise.allSettled(['73352'].map((id) => voteCsServers(id)));
+//   return JSON.stringify(results);
+// };
