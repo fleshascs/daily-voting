@@ -1,16 +1,17 @@
 import { vote as voteCsServers } from './cs-servers';
 import { vote as voteCsTops } from './cstops';
-import { fetchProxies } from './fetchProxies';
-import { getAgent } from './agent';
+import { getAgentUrls } from './proxy/getAgentUrls';
 
 export const handler = async (): Promise<string> => {
-  const proxies = await fetchProxies();
-  console.log('proxies', proxies);
+  const agentUrls = getAgentUrls(1);
 
-  const tasks = proxies.reduce<Array<Promise<void>>>((tasksList, proxy) => {
-    const agent = getAgent(proxy.protocols[0], proxy.ipAddress, proxy.port);
-    const csTops = ['cs.fleshas.lt:27015'].map((id) => voteCsTops(id, proxy.ipAddress, { agent }));
-    const csServers = ['73352'].map((id) => voteCsServers(id, { agent }));
+  const tasks = agentUrls.reduce<Array<Promise<void>>>((tasksList, agentUrl) => {
+    // if (process.env.FIDDLER_PROXY === 'true') {
+    // agentUrl = 'http://127.0.0.1:8888';
+    // }
+
+    const csTops = ['185.80.128.244:27019'].map((id) => voteCsTops(id, { proxy: agentUrl }));
+    const csServers = ['73348'].map((id) => voteCsServers(id, { proxy: agentUrl }));
     return tasksList.concat(csTops, csServers);
   }, []);
 
@@ -19,9 +20,4 @@ export const handler = async (): Promise<string> => {
   return JSON.stringify(results);
 };
 
-// import { vote as voteCsServers } from './cs-servers';
-
-// export const handler = async (): Promise<string> => {
-//   const results = await Promise.allSettled(['73352'].map((id) => voteCsServers(id)));
-//   return JSON.stringify(results);
-// };
+//handler();

@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  data-provider:
+    build:
+      context: ./
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./:/usr/app
+      - ./node_modules:/usr/app/node_modules

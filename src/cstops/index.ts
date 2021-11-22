@@ -1,14 +1,17 @@
 import { createHeaders } from '../utils';
-import { createStatefulFetch } from '../statefulFetch';
-import { RequestInit } from 'node-fetch';
+import { createStatefulRequest, requestPromise } from '../statefulRequest';
 
 export async function vote(
   serverIp: string,
-  proxyIp: string,
-  opt: RequestInit = {}
+  opt: Partial<Parameters<typeof requestPromise>[0]> = {}
 ): Promise<void> {
-  const fetch = createStatefulFetch();
-  await fetch('https://cstops.lt/js/rate/jRating.php', {
+  const request = createStatefulRequest();
+  const res = await request({ url: 'https://api.ipify.org?format=json', json: true, ...opt });
+  // console.log('1res.body.ip', res.body.ip);
+  // const res3 = await request({ url: 'https://api.ipify.org?format=json', json: true, ...opt });
+  // console.log('2res.body.ip', res3.body.ip);
+  const res2 = await request({
+    url: 'https://cstops.lt/js/rate/jRating.php',
     method: 'POST',
     headers: createHeaders({
       'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
@@ -20,11 +23,11 @@ export async function vote(
       rate: '10',
       action: 'rating',
       ip: serverIp,
-      visitor: proxyIp
-    }),
+      visitor: res.body.ip
+    }).toString(),
+    json: true,
     ...opt
   });
 
-  // const text = await res.text();
-  // console.log('text', text);
+  console.log('body', res2.body);
 }

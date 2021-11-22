@@ -18,3 +18,10 @@ docker run -d -v ~/.aws-lambda-rie:/aws-lambda -p 9000:8080 \
 
 curl -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{}'
 ```
+
+## run locally
+
+```shell script
+docker-compose -f docker-compose.local.yml build
+docker-compose -f docker-compose.local.yml up
+```

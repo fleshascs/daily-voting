@@ -1,34 +1,39 @@
 import { parse } from 'node-html-parser';
-import { RequestInit } from 'node-fetch';
 import { createHeaders, pipe, retry } from '../utils';
-import { createStatefulFetch } from '../statefulFetch';
 import { SecretData } from './types';
 import { parseCaptchaUrl, parseFormData } from './parseHtml';
 import { parseCaptcha } from './parseCaptcha';
+import { createStatefulRequest, requestPromise } from '../statefulRequest';
 
 export async function vote(...args: Parameters<typeof voteFn>): Promise<void> {
   await retry(() => voteFn(...args));
 }
 
-async function voteFn(serverId: string, opt: RequestInit = {}): Promise<void> {
-  const fetch = createStatefulFetch();
-  const res = await fetch('http://cs-servers.lt/vote.php?sid=' + serverId, opt);
-  const html = await res.text();
-  const data = pipe<SecretData>({ root: parse(html) }, parseCaptchaUrl, parseFormData);
+async function voteFn(
+  serverId: string,
+  opt: Partial<Parameters<typeof requestPromise>[0]> = {}
+): Promise<void> {
+  const request = createStatefulRequest();
+  const res = await request({ url: 'http://cs-servers.lt/vote.php?sid=' + serverId, ...opt });
+  const data = pipe<SecretData>({ root: parse(res.body) }, parseCaptchaUrl, parseFormData);
 
-  const captcha = await parseCaptcha(fetch, data.captchaUrl);
-  data.formData['CAPTCHA_VALUE'] = captcha;
+  const captchaImageBuffer = await request({ url: data.captchaUrl, encoding: null });
+  data.formData['CAPTCHA_VALUE'] = await parseCaptcha(captchaImageBuffer.body);
+  console.log('CAPTCHA_VALUE', data.formData['CAPTCHA_VALUE']);
 
-  const res2 = await fetch('http://cs-servers.lt/ajax.vote.php', {
+  const res2 = await request({
+    url: 'http://cs-servers.lt/ajax.vote.php',
     method: 'POST',
     headers: createHeaders({
       'Content-Type': 'application/x-www-form-urlencoded'
     }),
-    body: new URLSearchParams(data.formData)
+    body: new URLSearchParams(data.formData).toString(),
+    ...opt
   });
 
-  const text2 = await res2.text();
-  if (text2.toLowerCase().includes('klaida')) {
-    throw new Error(text2);
+  if (res2.body.toLowerCase().includes('klaida')) {
+    throw new Error(res2.body);
   }
+
+  console.log('res2.body', res2.body);
 }

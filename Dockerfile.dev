@@ -1,0 +1,21 @@
+FROM node:16-alpine
+
+#Setup working directory
+WORKDIR '/usr/app'
+
+#Copy the dependencies file
+COPY package.json .
+
+#Install dependencies
+RUN npm install
+
+#Copy remaining files
+COPY . .
+
+RUN apk update 
+RUN apk --no-cache add \
+    curl-dev \
+    tesseract-ocr
+
+#Start the application
+CMD ["npm", "run", "dev"]
