@@ -14,7 +14,7 @@ docker build -t voting .
 docker run -d -v ~/.aws-lambda-rie:/aws-lambda -p 9000:8080 \
  --entrypoint /aws-lambda/aws-lambda-rie \
  voting:latest \
- /usr/local/bin/npx aws-lambda-ric build/src/index.handler
+ /usr/local/bin/npx aws-lambda-ric build/src/aws_lambda.handler
 
 curl -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{}'
 ```

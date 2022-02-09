@@ -1,3 +1,3 @@
 import { vote } from './vote';
 
-vote();
+export const handler = vote;

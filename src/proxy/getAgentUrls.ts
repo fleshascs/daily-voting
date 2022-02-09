@@ -9,12 +9,7 @@ export function getAgentUrls(num: number): string[] {
 }
 
 export function getAgent(session_id: number): string {
-  const apiKey = '123';
   return (
-    'http://scraperapi.session_number=' +
-    session_id +
-    ':' +
-    apiKey +
-    '@proxy-server.scraperapi.com:8001'
+    'http://session-' + session_id + ':' + process.env.PROXY_API_KEY + '@' + process.env.PROXY_URL
   );
 }

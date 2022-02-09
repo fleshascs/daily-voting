@@ -1,5 +1,5 @@
 {
   "watch": ["src"],
-  "exec": "ts-node --transpile-only --project tsconfig.json ./src/index.ts",
+  "exec": "ts-node -r ./node_modules/dotenv/config --transpile-only --project tsconfig.json ./src/index.ts",
   "ext": "js ts"
 }

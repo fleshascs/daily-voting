@@ -36,6 +36,6 @@ RUN apk --no-cache add \
 RUN ln -s /usr/share/aclocal /usr/local/share/aclocal
 
 ENTRYPOINT ["/usr/local/bin/npx", "aws-lambda-ric"]
-CMD ["build/src/index.handler"]
+CMD ["build/src/aws_lambda.handler"]
 # CMD [ "node", "./build/src/index.js" ]
 # CMD ["tesseract", "--version"]

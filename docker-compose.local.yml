@@ -8,3 +8,4 @@ services:
     volumes:
       - ./:/usr/app
       - ./node_modules:/usr/app/node_modules
+      - ./.env:/usr/app/.env

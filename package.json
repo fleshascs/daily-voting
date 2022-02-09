@@ -19,6 +19,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.0.0",
     "https-proxy-agent": "^5.0.0",
     "node-html-parser": "^5.1.0",
     "node-tesseract-ocr": "^2.2.1",
