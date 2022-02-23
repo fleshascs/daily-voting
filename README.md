@@ -7,8 +7,8 @@
 ## run using cron job
 
 ```shell script
-docker build -t voting .
-docker run -e PROXY_API_KEY=123 -d --name voting fleshas/voting:latest
+docker build -t fleshas/voting .
+docker run -d -e PROXY_API_KEY=123 -d --name voting fleshas/voting:latest
 ```
 
 ## run AWS Lambda locally
