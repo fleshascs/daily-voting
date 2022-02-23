@@ -1,10 +1,12 @@
 version: '3'
 
 services:
-  data-provider:
+  vote:
     build:
       context: ./
       dockerfile: Dockerfile.dev
+    environment:
+      PROXY_API_KEY: '123'
     volumes:
       - ./:/usr/app
       - ./node_modules:/usr/app/node_modules

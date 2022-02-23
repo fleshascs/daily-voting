@@ -1,6 +1,6 @@
 FROM node:16-alpine  AS BUILD_IMAGE
-WORKDIR /function
-COPY . /function
+WORKDIR /user/app
+COPY . /user/app
 
 RUN apk update 
 RUN apk --no-cache add \
@@ -21,17 +21,17 @@ RUN npm prune --production
 
 FROM node:16-alpine
 
-WORKDIR /function
+WORKDIR /user/app
 
-COPY --from=BUILD_IMAGE /function/build ./build
-COPY --from=BUILD_IMAGE /function/node_modules ./node_modules
+COPY --from=BUILD_IMAGE /user/app/build ./build
+COPY --from=BUILD_IMAGE /user/app/node_modules ./node_modules
 
 RUN apk update 
 RUN apk --no-cache add \
     curl-dev \
     tesseract-ocr
 
-COPY /cronjobs /etc/crontabs/root
+RUN echo '* * * * * node /user/app/build/src/index.js' > /etc/crontabs/root
 
 CMD ["crond", "-f", "-d", "8"]
 
