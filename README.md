@@ -4,12 +4,20 @@
 
 - Tesseract OCR https://github.com/tesseract-ocr/tesseract
 
+## run using cron job
+
+```shell script
+
+docker build -t voting .
+docker run -d --name voting fleshas/voting:latest
+```
+
 ## run AWS Lambda locally
 
 https://github.com/aws/aws-lambda-nodejs-runtime-interface-client
 
 ```shell script
-docker build -t voting .
+docker build -f Dockerfile.lambda -t voting .
 
 docker run -d -v ~/.aws-lambda-rie:/aws-lambda -p 9000:8080 \
  --entrypoint /aws-lambda/aws-lambda-rie \

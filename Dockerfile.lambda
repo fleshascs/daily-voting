@@ -15,6 +15,8 @@ RUN apk --no-cache add \
     libexecinfo-dev \
     python3
 
+RUN npm install aws-lambda-ric
+
 RUN npm install && npm run build
 
 RUN npm prune --production
@@ -31,8 +33,9 @@ RUN apk --no-cache add \
     curl-dev \
     tesseract-ocr
 
-COPY /cronjobs /etc/crontabs/root
+RUN ln -s /usr/share/aclocal /usr/local/share/aclocal
 
-CMD ["crond", "-f", "-d", "8"]
-
-# CMD ["node","build/src/index.js"]
+ENTRYPOINT ["/usr/local/bin/npx", "aws-lambda-ric"]
+CMD ["build/src/aws_lambda.handler"]
+# CMD [ "node", "./build/src/index.js" ]
+# CMD ["tesseract", "--version"]
