@@ -32,9 +32,9 @@ RUN apk --no-cache add \
     tesseract-ocr
 
 # every 24h
-# RUN echo '0 0 * * * node /user/app/build/src/index.js' > /etc/crontabs/root
+RUN echo '0 0 * * * node /user/app/build/src/index.js' > /etc/crontabs/root
 # every 12h
-RUN echo '0 */12 * * * node /user/app/build/src/index.js' > /etc/crontabs/root
+# RUN echo '0 */12 * * * node /user/app/build/src/index.js' > /etc/crontabs/root
 
 CMD ["crond", "-f", "-d", "8"]
 
